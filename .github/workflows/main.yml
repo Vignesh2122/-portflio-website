@@ -1,0 +1,33 @@
+name: SonarQube Scan with NPM
+
+on:
+  schedule:
+    - cron: '5 5 * * *'  
+
+jobs:
+  sonarQubeScan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install Sonar Scanner
+        run: npm install -g sonarqube-scanner
+
+      - name: Run SonarQube Scan
+        env:
+          SONAR_HOST_URL: https://sonar.piraiinfo.com
+          SONAR_TOKEN: sqp_8eab4a627f4ecb50142ee7d3d85c87a61252d2ff
+        run: |
+         sonar-scanner \
+          -Dsonar.projectKey=test \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=https://sonar.piraiinfo.com \
+          -Dsonar.token=sqp_8eab4a627f4ecb50142ee7d3d85c87a61252d2ff
